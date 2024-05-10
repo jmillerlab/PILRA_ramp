@@ -17,7 +17,7 @@ Output: Figure 2 png file saved to outputfigs/ directory (user must create this 
 
 Example command:
 ```
-python3 figure2.py Adipose_Tissue PILRA_ramp/Manuscript/wtspeedsadipose.fasta PILRA_ramp/Manuscript/mtspeedsadipose.fasta 
+python3 figure2.py Amygdala PILRA_ramp/Manuscript/wtspeedsamygdala.fasta PILRA_ramp/Manuscript/mtspeedsamygdala.fasta 
 ```
 
 ## Requirements:
