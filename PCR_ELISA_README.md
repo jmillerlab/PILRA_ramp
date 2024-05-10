@@ -37,6 +37,7 @@ Example Command:
 ```
 python3 PILRA_ELISA_plot.py PILRA_ramp/Manuscript/ELISA_data.csv path/to/output/directory
 ```
+The output should match ELISAplot.png in the expected outputs directory.
 
 ## Requirements
 
