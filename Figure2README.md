@@ -19,6 +19,7 @@ Example command:
 ```
 python3 figure2.py Amygdala PILRA_ramp/Manuscript/wtspeedsamygdala.fasta PILRA_ramp/Manuscript/mtspeedsamygdala.fasta 
 ```
+The output should match Amygdala.png in the expected outputs directory.
 
 ## Requirements:
 
