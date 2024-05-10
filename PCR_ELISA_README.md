@@ -35,7 +35,7 @@ Output: png file of violin plot comparing the wildtype and mutant protein concen
 
 Example Command:
 ```
-python3 PILRA_ELISA_plot.py path/to/ELISA_data.csv path/to/output/directory
+python3 PILRA_ELISA_plot.py PILRA_ramp/Manuscript/ELISA_data.csv path/to/output/directory
 ```
 
 ## Requirements
