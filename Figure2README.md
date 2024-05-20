@@ -3,7 +3,7 @@
 ## Purpose
 Figure 2 creates a line graph comparing the relative codon adaptiveness of ENST00000198536.7 wildtype Paired Immunoglobulin type 2 receptor alpha (PILRA)  gene versus rs2405442:T>C mutant _PILRA_ isoform. It uses the speeds of both the wildtype and mutant _PILRA_ sequence provided by the user.
 
-Input: Wildtype and mutant speeds fasta files created by ExtRamp
+Input: Wildtype and mutant speeds fasta files created by ExtRamp https://github.com/ridgelab/ExtRamp
 
 Output: Figure 2 png file saved to outputfigs/ directory (user must create this directory)
 
