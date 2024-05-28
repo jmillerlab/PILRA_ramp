@@ -11,6 +11,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import argparse
+import matplotlib.patches as patches
 
 def main():
     #argparse for input mt and wt speeds files
@@ -21,7 +22,6 @@ def main():
     parser.add_argument("mtspeeds",help="Path to mutant speeds file",action="store")
     args=parser.parse_args()
   
-    # There is definitely a shorter way to code this but idk how to do it 
     if not os.path.isfile(args.wtspeeds):
         print(args.wtspeeds, "is not a correct file path!")
         sys.exit()
@@ -30,23 +30,13 @@ def main():
         sys.exit()
 
 
-    # Read in the line in the file that is pertinent
-    pilra_speeds = pd.read_csv(args.wtspeeds, skiprows=[0,2,3,4,5,6,7,8,9],
-                           dtype=np.float64, header=None)
+    # Read line of file that is pertinent
+    pilra_speeds = pd.read_csv(args.wtspeeds, skiprows=[0],
+                           dtype=np.float64, header=None).to_numpy()[0]
     pilra_mutant_speed = pd.read_csv(args.mtspeeds, skiprows=[0],
-                                dtype=np.float64, header=None)
+                                dtype=np.float64, header=None).to_numpy()[0]
 
-    # Calculate sliding window means
-
-    speeds = pilra_speeds.values[0]
-    N = 9 # Use a 9-codon window (the default setting for ExtRamp)
-    windowMeans = pd.Series(speeds).rolling(window=N).mean().iloc[N-1:].values
-
-    mutant_speeds = pilra_mutant_speed.values[0]
-    N = 9
-    mutant_windowMeans = pd.Series(mutant_speeds).rolling(window=N).mean().iloc[N-1:].values
-
-    positions = range(1, 295) # for x-axis
+    positions = range(1, 294) # for x-axis
     
     # fix name if it has words 
     if "_" in args.name:
@@ -54,17 +44,15 @@ def main():
 
     # Plot the data
 
-    plt.plot(positions, mutant_windowMeans, 'r', label="rs2405442:T>C Mutant")
-    plt.plot(positions, windowMeans, 'b', label="ENST00000198536.7 Wildtype")
+    plt.plot(positions, pilra_mutant_speed, 'r', label="rs2405442:T>C Mutant")
+    plt.plot(positions, pilra_speeds, 'b', label="ENST00000198536.7 Wildtype")
     plt.plot()
-    plt.xlim([0,301]) # Doesn't run when set to 300...?
+    plt.xlim([0,301]) 
     plt.ylim([0,1.1])
-    # Any ideas about more accurate/precise labels/titles for the figure?
-    # Specifically, how do we reference that these are predicted means?
     plt.ylabel('Relative Codon Adaptiveness')
     plt.xlabel('Codon Position')
     
-    #writing new name if it contains two words
+    # writing new name if it contains multiple words
     plt.title('Relative Codon Adaptiveness for ' + args.name)
 
     plt.annotate('Ramp sequence region', xy=(25,.6),
@@ -73,38 +61,22 @@ def main():
 
 
 
-   # plt.show()
-
-    # An idea of what text could accompany/explain a figure like this:
-    # Figure 2: Predicted rate of translation of PILRA mRNA, produced using ExtRamp.
-    # The plot depicts mean translation rates produced using a sliding window
-    # of 9-codons. The ramp sequence, which by definition is located at the
-    # beginning of the sequence, has been labeled for clarity.
 
     fig, ax = plt.subplots() # create a new figure with a default 111 subplot
 
-    ax.plot(positions, mutant_windowMeans, 'r', label="rs2405442:T>C Mutant")
-    ax.plot(positions, windowMeans, 'b', label="ENST00000198536.7 Wildtype")
-    from mpl_toolkits.axes_grid1.inset_locator import zoomed_inset_axes
-    axins = zoomed_inset_axes(ax, 2.5, loc='lower left')
-    axins.plot(positions, mutant_windowMeans, 'r')
-    axins.plot(positions, windowMeans, 'b')
-    ax.set_xlim([0,301]) # Doesn't run when set to 300...?
+    ax.plot(positions, pilra_mutant_speed, 'r', label="rs2405442:T>C Mutant")
+    ax.plot(positions, pilra_speeds, 'b', label="ENST00000198536.7 Wildtype")
+    ax.set_xlim([0,301]) 
     ax.set_ylim([0,1.1])
     x1, x2, y1, y2 = 0, 30, 0.7, 0.95 # specify the limits
-    axins.set_xlim(x1, x2) # apply the x-limits
-    axins.set_ylim(y1, y2)
-    plt.yticks(visible=False)
-    plt.xticks(visible=False)
-    from mpl_toolkits.axes_grid1.inset_locator import mark_inset
-    mark_inset(ax, axins, loc1=2, loc2=1, fc="none", ec="0.5")
-
+    rect = patches.Rectangle((x1, y1), x2, y2-y1, linewidth=1, edgecolor='black', facecolor='none')
+    ax.add_patch(rect)
     ax.set_ylabel('Relative Codon Adaptiveness')
     ax.set_xlabel('Codon Position')
 
     ax.set_title('Relative Codon Adaptiveness for PILRA in '+ args.name)
-    ax.annotate('Ramp Sequence Region', xy=(80,.365),
-             xytext=(145, .35), fontsize=12, arrowprops=dict(facecolor='black', shrink=0.1, width=2.5, headwidth=9), xycoords='data')
+    ax.annotate('Ramp Sequence Region', xy=(35,.55),
+             xytext=(70, .54), fontsize=12, arrowprops=dict(facecolor='black', shrink=0.1, width=2.5, headwidth=9), xycoords='data')
     ax.legend(loc="lower right")
 
 
