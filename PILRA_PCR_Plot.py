@@ -4,20 +4,20 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter
 
 # Data
-WT = [2.91E-06, 3.54E-07, 4.27E-07, 1.66E-06, 1.6604E-06, 3.12E-07, 4.01E-07, 1.65E-07,3.64E-07, 6.10E-08, 3.49E-07, 2.66E-07, 2.82E-07, 1.96E-07, 1.86E-07, 2.32E-07, 1.64E-07, 1.64E-07]
-MUT = [2.2616E-09, 3.45643E-10, 2.24599E-09, 2.76514E-09, 8.44064E-09, 7.15663E-10, 8.62952E-10, 7.05811E-10, 8.67794E-09, 1.94434E-10, 1.4696E-08, 1.061E-08, 1.24604E-09, 4.92212E-10, 2.8E-08, 9.23654E-09, 9.56227E-09, 3.59839E-09]
-data = pd.DataFrame({'CHO Line': ['Wildtype'] * len(WT) + ['Mutant'] * len(MUT), 'Expression Level': WT + MUT})
+#WT=[18.39, 20.59, 21.43, 21.16, 19.2, 21.08, 21.61, 21.25, 22.53, 21.39, 23.97, 21.45, 21.84, 21.76, 22.28, 22.36, 22.04, 22.54] #outliers included
+WT=[20.59, 21.43, 21.16, 21.08, 21.61, 21.25, 22.53, 21.39, 23.97, 21.45, 21.84, 21.76, 22.28, 22.36, 22.04, 22.54] #outliers removed
+WT=[pow(2,(-1*x)) for x in WT] #convert to 2^-Ct
 
+MUT=[28.72, 31.43, 28.73, 28.43, 26.82, 30.38, 30.11, 30.4, 26.78, 32.26, 26.02, 26.49, 29.58, 30.92, 25.09, 26.69, 26.64, 28.05]
+MUT=[pow(2,(-1*x)) for x in MUT] #Convert to 2^-Ct
+data = pd.DataFrame({'CHO Line': ['Wildtype'] * len(WT) + ['Mutant'] * len(MUT), 'Expression Level': WT + MUT})
 plt.figure(figsize=(10, 6))
+plt.rcParams.update({'font.size': 16})
 sns.violinplot(x='CHO Line', y='Expression Level', data=data, palette=['gray', 'white'])
 sns.stripplot(x='CHO Line', y='Expression Level', data=data, color='black', alpha=0.7)
 
-# Formatter function for scientific notation
-formatter = FuncFormatter(lambda y, _: f'{y:.1e}')
-plt.gca().yaxis.set_major_formatter(formatter)
-
-plt.xlabel('')  # Removed as per feedback
-plt.ylabel('Relative Expression Level (fold change)', fontsize=12)
-plt.title('PILRA qPCR Results', fontsize=14)
+plt.xlabel('')
+plt.ylabel('2^-∆Ct (PILRA - GAPDH)', fontsize=18)
+plt.title('PILRA qPCR Results', fontsize=24)
 
 plt.show()
